@@ -56,22 +56,20 @@ function reloadServer (done) {
 }
 
 function watchFiles () {
-	watch(["./styles/**/*.css", "!./styles/**/*.min.css"], series(processStyles));
-	watch(["./icons/**/*.svg", "!./icons/stack.svg"], series(createStack, reloadServer));
+	watch("./styles/style.css", series(processStyles));
+	watch("./icons/**/*.svg", series(createStack, reloadServer));
 	watch("./**/*.{html,js,jpg,png,svg,ico,webmanifest}", series(reloadServer));
 }
 
-export function compileProject (done) {
+export function compileProject(done) {
 	parallel(
 		processStyles,
 		createStack
 	)(done);
 }
 
-export function runDev (done) {
-	series(
-		compileProject,
-		startServer,
-		watchFiles
-	)(done);
-}
+export default series(
+	compileProject,
+	startServer,
+	watchFiles
+);
